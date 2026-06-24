@@ -7,4 +7,5 @@ requires-python = ">=3.11"
 dependencies = [
     "faker>=40.23.0",
     "pandas>=3.0.3",
+    "psycopg2>=2.9.12",
 ]

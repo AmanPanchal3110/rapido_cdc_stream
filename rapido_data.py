@@ -1,44 +1,86 @@
 from faker import Faker
-import pandas as pd
 import random
 from datetime import datetime
 import uuid
+import psycopg2
+
+conn= psycopg2.connect(
+    host="localhost",
+    port=5432,
+    dbname="rapido_db",
+    user="Aman",
+    password="panchal@3110"
+)
+cur=conn.cursor()
+
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS drivers(
+            driver_id     VARCHAR(10) PRIMARY KEY,
+            driver_name   VARCHAR(100),
+            vehicle_type  VARCHAR(10),
+            vehicle_no    VARCHAR(20),
+            total_rides   INT DEFAULT 0,
+            avg_rating    NUMERIC(3,1) DEFAULT 0.0,
+            is_active     BOOLEAN DEFAULT TRUE,
+            created_at    TIMESTAMP DEFAULT NOW());""")
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS riders(
+                rider_id    VARCHAR(10) PRIMARY KEY,
+            rider_name  VARCHAR(100),
+            phone       VARCHAR(15),
+            email       VARCHAR(100),
+            city        VARCHAR(50),
+            created_at  TIMESTAMP DEFAULT NOW());""")
+
+conn.commit()
 
 fake=Faker('en_IN')
 
-def data():
+def drivers_data(n):
     driver_data=[]
-    for i in range(20):
-        driver_data.append({
-            "driver_id": f"D:{str(uuid.uuid4())[:6]}",
-            "driver_name":fake.name(),
-            "vehicle_type":random.choice(["bike","car","auto"]),
-            "vehicle_no": f"{random.choice(['DL','HR','RJ','GJ','MH'])} {random.randint(10,99):02d} {''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=2))} {random.randint(1000,9999)}",
-            "total_rides":random.randint(0,500),
-            "avg_rating": round(random.uniform(2,5),1),
-            "created_at": datetime.now().isoformat()
-        })
-    rider_data=[]    
-    for i in range(200):
-        name=fake.name()
-        email_id=name.lower().replace(" ", ".")
-        rider_data.append({
-            "rider_id": f"R:{str(uuid.uuid4())[:6]}",
-            "rider_name": name,
-            "phn_no": f"+91-{random.choice(['6','7','8','9'])}{random.randint(100000000, 999999999)}",
-            "email_id": email_id,
-            "city":fake.city(),
-            "created_at": datetime.now().isoformat()
-        })
-    rdriver_data = pd.DataFrame(driver_data)
-    rrider_data = pd.DataFrame(rider_data)  
+    for i in range(n):
+        driver_data.append((
+            "D"+str(uuid.uuid4())[:6].upper(),
+            fake.name(),
+            random.choice(["bike","car","auto"]),
+            f"{random.choice(['DL','HR','RJ','GJ','MH'])} {random.randint(10,99):02d} {''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=2))} {random.randint(1000,9999)}",
+            0,
+            0.0,
+            True,
+            datetime.now()
+        ))
+    return driver_data
     
-    return rdriver_data,rrider_data
+def rider_data(n):        
+    rider_data=[]    
+    for i in range(n):
+        name=fake.name()
+        email_id=name.lower().replace(" ", ".")+f"{random.randint(1,99)}@gmail.com"
+        rider_data.append((
+            "R"+str(uuid.uuid4())[:6].upper(),
+            name,
+            f"+91-{random.choice(['6','7','8','9'])}{random.randint(100000000, 999999999)}",
+            email_id,
+            fake.city(),
+            datetime.now()
+        ))
+    return rider_data
 
-d_data,r_data=data()
+drivers=drivers_data(50)
+riders=rider_data(200)
 
-print(d_data)
-print("/n")
-print(r_data)
+cur.executemany("""
+                INSERT INTO drivers(driver_id,driver_name,vehicle_type,vehicle_no,total_rides,avg_rating,is_active,created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (driver_id) DO NOTHING;""",drivers)
+cur.executemany("""
+                INSERT INTO riders(rider_id,rider_name,phone,email,city,created_at)
+                VALUES (%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (rider_id) DO NOTHING;""",riders)
+
+conn.commit()
+print("data created")
+cur.close()
+conn.close()
     
         
