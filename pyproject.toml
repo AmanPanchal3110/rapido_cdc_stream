@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "faker>=40.23.0",
+    "logging>=0.4.9.6",
     "pandas>=3.0.3",
     "psycopg2>=2.9.12",
+    "requests>=2.34.2",
 ]
