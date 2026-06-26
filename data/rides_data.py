@@ -9,8 +9,8 @@ import time
 fake=Faker('en_IN')
 
 conn_pool=pool.ThreadedConnectionPool(
-    minconn=2,
-    maxconn=10,
+    minconn=5,
+    maxconn=25,
     host="localhost",
     port=5432,
     dbname="rapido_db",
@@ -86,7 +86,7 @@ def ride_flow(driver_id,vehicle_type,rider_id):
         print("ride_id is inserted")
         
         if random.random()<0.2:
-            time.sleep(random.uniform(1,2))
+            time.sleep(random.uniform(0.5,1.5))
             cur.execute("""UPDATE rides
                         SET status='cancelled',updated_at=%s
                         WHERE ride_id=%s;
@@ -129,7 +129,7 @@ def ride_flow(driver_id,vehicle_type,rider_id):
             conn_pool.putconn(conn)
 
 print("simulation start")
-MAX_THREAD=5
+MAX_THREAD=20
 driver_lock=threading.Lock()
 while True:
     active=threading.active_count()-1
@@ -161,6 +161,6 @@ while True:
         t=threading.Thread(target=ride_flow,args=(driver_id,vehicle_type,rider_id))
         t.daemon = True
         t.start()
-        time.sleep(random.uniform(0.5, 2))
+        time.sleep(random.uniform(0.1,0.5))
     else:
         time.sleep(1)
