@@ -50,7 +50,8 @@ driver_schema=StructType([
         StructField("total_rides", IntegerType(), True),
         StructField("avg_rating", StringType(), True),  
         StructField("is_active", BooleanType(), True),
-        StructField("created_at", LongType(), True)
+        StructField("created_at", LongType(), True),
+        StructField("updated_at",LongType(),True)
     ]),True)
 ])
 
@@ -64,7 +65,8 @@ rider_schema=StructType([
         StructField("city",StringType(),True),
         StructField("total_rides",IntegerType(),True),
         StructField("avg_rating",StringType(),True),
-        StructField("created_at",LongType(),True)
+        StructField("created_at",LongType(),True),
+        StructField("updated_at",LongType(),True)
     ]),True)
 ])
 
@@ -101,6 +103,7 @@ driver_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/drivers")\
             .option("path","s3a://rapido-data/bronze/drivers/")\
+            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
             
@@ -108,6 +111,7 @@ rider_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/riders")\
             .option("path","s3a://rapido-data/bronze/riders/")\
+            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
             
@@ -115,6 +119,7 @@ ride_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/rides")\
             .option("path","s3a://rapido-data/bronze/rides/")\
+            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
             

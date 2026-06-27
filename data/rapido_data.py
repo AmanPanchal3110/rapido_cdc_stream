@@ -22,7 +22,8 @@ cur.execute("""
             total_rides   INT DEFAULT 0,
             avg_rating    NUMERIC(3,1) DEFAULT 0.0,
             is_active     BOOLEAN DEFAULT TRUE,
-            created_at    TIMESTAMP DEFAULT NOW());""")
+            created_at    TIMESTAMP DEFAULT NOW(),
+            updated_at    TIMESTAMP DEFAULT NOW());""")
 cur.execute("""
             CREATE TABLE IF NOT EXISTS riders(
             rider_id    VARCHAR(10) PRIMARY KEY,
@@ -32,7 +33,8 @@ cur.execute("""
             city        VARCHAR(50),
             total_rides   INT DEFAULT 0,
             avg_rating    NUMERIC(3,1) DEFAULT 0.0,
-            created_at  TIMESTAMP DEFAULT NOW());""")
+            created_at  TIMESTAMP DEFAULT NOW(),
+            updated_at    TIMESTAMP DEFAULT NOW());""")
 
 conn.commit()
 
@@ -49,6 +51,7 @@ def drivers_data(n):
             0,
             0.0,
             True,
+            datetime.now(),
             datetime.now()
         ))
     return driver_data
@@ -66,6 +69,7 @@ def rider_data(n):
             fake.city(),
             0,
             0.0,
+            datetime.now(),
             datetime.now()
         ))
     return rider_data
@@ -74,12 +78,12 @@ drivers=drivers_data(50)
 riders=rider_data(200)
 
 cur.executemany("""
-                INSERT INTO drivers(driver_id,driver_name,vehicle_type,vehicle_no,total_rides,avg_rating,is_active,created_at)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO drivers(driver_id,driver_name,vehicle_type,vehicle_no,total_rides,avg_rating,is_active,created_at,updated_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (driver_id) DO NOTHING;""",drivers)
 cur.executemany("""
-                INSERT INTO riders(rider_id,rider_name,phone,email,city,total_rides,avg_rating,created_at)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO riders(rider_id,rider_name,phone,email,city,total_rides,avg_rating,created_at,updated_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (rider_id) DO NOTHING;""",riders)
 
 conn.commit()

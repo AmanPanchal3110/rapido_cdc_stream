@@ -19,4 +19,9 @@ df_driver=spark.read.format("delta").load("s3a://rapido-data/silver/drivers/")
 df_rider=spark.read.format("delta").load("s3a://rapido-data/silver/riders/")
 df_ride=spark.read.format("delta").load("s3a://rapido-data/silver/rides/")
 
+df_drivers=spark.read.format("delta").load("s3a://rapido-data/bronze/drivers/")
+df_riders=spark.read.format("delta").load("s3a://rapido-data/bronze/riders/")
+df_rides=spark.read.format("delta").load("s3a://rapido-data/bronze/rides/")
+
 print(df_driver.count(),df_rider.count(),df_ride.count())
+print(df_drivers.count(),df_riders.count(),df_rides.count())

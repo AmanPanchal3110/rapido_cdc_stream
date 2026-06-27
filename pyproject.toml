@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "boto3>=1.43.36",
     "delta>=0.4.2",
     "faker>=40.23.0",
     "logging>=0.4.9.6",

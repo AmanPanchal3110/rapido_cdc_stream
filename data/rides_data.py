@@ -105,12 +105,12 @@ def ride_flow(driver_id,vehicle_type,rider_id):
                             (status,rider_rating,driver_rating,datetime.now(),ride_id))
                 cur.execute("""UPDATE drivers
                             SET total_rides = total_rides + 1,
-                            avg_rating  = (avg_rating * total_rides + %s) / (total_rides + 1)
-                            WHERE driver_id = %s;""",(driver_rating,driver_id))
+                            avg_rating  = (avg_rating * total_rides + %s) / (total_rides + 1),updated_at=%s
+                            WHERE driver_id = %s;""",(driver_rating,datetime.now(),driver_id))
                 cur.execute("""UPDATE riders
                             SET total_rides=total_rides+1,
-                            avg_rating=(avg_rating * total_rides + %s) / (total_rides + 1)
-                            WHERE rider_id=%s;""",(rider_rating,rider_id))
+                            avg_rating=(avg_rating * total_rides + %s) / (total_rides + 1),updated_at=%s
+                            WHERE rider_id=%s;""",(rider_rating,datetime.now(),rider_id))
             else:
                 cur.execute("""UPDATE rides
                             SET status=%s,updated_at=%s WHERE ride_id=%s;""",
@@ -122,8 +122,8 @@ def ride_flow(driver_id,vehicle_type,rider_id):
         conn.rollback()
     finally:
         try:
-            cur.execute("""UPDATE drivers SET is_busy=FALSE WHERE driver_id=%s;""",(driver_id,))
-            cur.execute("""UPDATE riders SET is_riding=FALSE WHERE rider_id=%s;""",(rider_id,))
+            cur.execute("""UPDATE drivers SET is_busy=FALSE,updated_at=%s WHERE driver_id=%s;""",(datetime.now(),driver_id))
+            cur.execute("""UPDATE riders SET is_riding=FALSE,updated_at=%s WHERE rider_id=%s;""",(datetime.now(),rider_id))
             conn.commit()
             print(f"FREE | Driver: {driver_id} | Rider: {rider_id}")
         except Exception as e:
@@ -157,8 +157,8 @@ while True:
                 continue
             driver_id,vehicle_type=random.choice(free_driver)
             rider_id=random.choice(free_rider)
-            cur.execute("""UPDATE drivers SET is_busy=TRUE WHERE driver_id=%s;""",(driver_id,))
-            cur.execute("UPDATE riders SET is_riding=TRUE WHERE rider_id=%s;", (rider_id,))
+            cur.execute("""UPDATE drivers SET is_busy=TRUE,updated_at=%s WHERE driver_id=%s;""",(datetime.now(),driver_id))
+            cur.execute("UPDATE riders SET is_riding=TRUE,updated_at=%s WHERE rider_id=%s;", (datetime.now(),rider_id))
             conn.commit()
             cur.close()
             conn_pool.putconn(conn)
