@@ -62,6 +62,8 @@ rider_schema=StructType([
         StructField("phone",StringType(),True),
         StructField("email",StringType(),True),
         StructField("city",StringType(),True),
+        StructField("total_rides",IntegerType(),True),
+        StructField("avg_rating",StringType(),True),
         StructField("created_at",LongType(),True)
     ]),True)
 ])

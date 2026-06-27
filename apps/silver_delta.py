@@ -25,7 +25,8 @@ df_ride=spark.read.format("delta").load("s3a://rapido-data/bronze/rides/")
 df_driver=df_driver.withColumn("created_at",to_timestamp(from_unixtime(col("created_at")/1000000)))\
                     .withColumn("avg_rating",col("avg_rating").cast(DecimalType(3,1)))
                     
-df_rider=df_rider.withColumn("created_at",to_timestamp(from_unixtime(col("created_at")/1000000)))
+df_rider=df_rider.withColumn("created_at",to_timestamp(from_unixtime(col("created_at")/1000000)))\
+                .withColumn("avg_rating",col("avg_rating").cast(DecimalType(3,1)))
 
 df_ride=df_ride.withColumn("created_at",to_timestamp(from_unixtime(col("created_at")/1000000)))\
                 .withColumn("updated_at",to_timestamp(from_unixtime(col("updated_at")/1000000)))\

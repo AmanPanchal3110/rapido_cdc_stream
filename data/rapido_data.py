@@ -25,11 +25,13 @@ cur.execute("""
             created_at    TIMESTAMP DEFAULT NOW());""")
 cur.execute("""
             CREATE TABLE IF NOT EXISTS riders(
-                rider_id    VARCHAR(10) PRIMARY KEY,
+            rider_id    VARCHAR(10) PRIMARY KEY,
             rider_name  VARCHAR(100),
             phone       VARCHAR(15),
             email       VARCHAR(100),
             city        VARCHAR(50),
+            total_rides   INT DEFAULT 0,
+            avg_rating    NUMERIC(3,1) DEFAULT 0.0,
             created_at  TIMESTAMP DEFAULT NOW());""")
 
 conn.commit()
@@ -62,6 +64,8 @@ def rider_data(n):
             f"+91-{random.choice(['6','7','8','9'])}{random.randint(100000000, 999999999)}",
             email_id,
             fake.city(),
+            0,
+            0.0,
             datetime.now()
         ))
     return rider_data
@@ -74,8 +78,8 @@ cur.executemany("""
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (driver_id) DO NOTHING;""",drivers)
 cur.executemany("""
-                INSERT INTO riders(rider_id,rider_name,phone,email,city,created_at)
-                VALUES (%s,%s,%s,%s,%s,%s)
+                INSERT INTO riders(rider_id,rider_name,phone,email,city,total_rides,avg_rating,created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (rider_id) DO NOTHING;""",riders)
 
 conn.commit()

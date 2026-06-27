@@ -107,6 +107,10 @@ def ride_flow(driver_id,vehicle_type,rider_id):
                             SET total_rides = total_rides + 1,
                             avg_rating  = (avg_rating * total_rides + %s) / (total_rides + 1)
                             WHERE driver_id = %s;""",(driver_rating,driver_id))
+                cur.execute("""UPDATE riders
+                            SET total_rides=total_rides+1,
+                            avg_rating=(avg_rating * total_rides + %s) / (total_rides + 1)
+                            WHERE rider_id=%s;""",(rider_rating,rider_id))
             else:
                 cur.execute("""UPDATE rides
                             SET status=%s,updated_at=%s WHERE ride_id=%s;""",
