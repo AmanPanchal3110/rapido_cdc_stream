@@ -3,6 +3,3 @@ target/
 dbt_packages/
 logs/
 
-# dbt
-dbt_project/target/
-dbt_project/logs/
