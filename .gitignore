@@ -6,3 +6,7 @@ ivy-cache/
 logs/
 config/airflow.cfg
 dags/__pycache__/
+
+# Jar files kabhi push mat karo
+*.jar
+*.jar.part
