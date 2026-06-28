@@ -3,6 +3,7 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import *
 from datetime import datetime
 import os
+from pyspark.sql.window import Window
 spark=(
     SparkSession.builder.appName("rapido_silver_delta")\
     .config("spark.sql.extensions","io.delta.sql.DeltaSparkSessionExtension") \
@@ -23,5 +24,5 @@ df_drivers=spark.read.format("delta").load("s3a://rapido-data/bronze/drivers/")
 df_riders=spark.read.format("delta").load("s3a://rapido-data/bronze/riders/")
 df_rides=spark.read.format("delta").load("s3a://rapido-data/bronze/rides/")
 
-print(df_driver.count(),df_rider.count(),df_ride.count())
-print(df_drivers.count(),df_riders.count(),df_rides.count())
+df_rides=df_rides.filter(col("status").isin(["completed","cancelled"]))
+print(df_rides.count())
