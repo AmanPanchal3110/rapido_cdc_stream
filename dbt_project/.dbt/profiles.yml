@@ -1,0 +1,13 @@
+rapido_dbt:
+  outputs:
+    dev:
+      account: MXJTGSW-GV57045
+      database: rapido
+      password: PAnchalAMan3110
+      role: ACCOUNTADMIN
+      schema: demo
+      threads: 1
+      type: snowflake
+      user: AMANPANCHAL2734
+      warehouse: COMPUTE_WH
+  target: dev
