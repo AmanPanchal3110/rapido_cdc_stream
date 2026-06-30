@@ -21,6 +21,12 @@ SELECT
     COALESCE(ds.total_rides,0) AS total_rides,
     ROUND(
         COALESCE(ds.cancelled_rides,0)*100 / NULLIF(ds.total_rides,0),2
-    ) AS  cancellation_rate
+    ) AS  cancellation_rate,
+    CASE 
+        WHEN COALESCE(ds.total_rides,0)>=600 THEN 'HIGHLY ACTIVE'
+        WHEN COALESCE(ds.total_rides,0)>=250 THEN 'ACTIVE'
+        WHEN COALESCE(ds.total_rides,0)>=50 THEN 'MODERATE ACTIVE'
+        ELSE 'NEW DRIVERS'
+    END AS driver_activity
 FROM {{source('raw','drivers')}} d
 LEFT JOIN drivers_data ds ON d.driver_id=ds.driver_id
