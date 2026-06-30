@@ -1,0 +1,19 @@
+SELECT
+    ride_id,
+    driver_id,
+    rider_id,
+    status,
+    pickup,
+    drop_loc,
+    vehicle_type,
+    fare,
+    distance_km,
+    rider_rating,
+    driver_rating,
+    created_at,
+    updated_at,
+    ride_date,
+    ride_hour,
+    ride_month,
+    ride_year
+FROM {{ref('stg_rides')}}
