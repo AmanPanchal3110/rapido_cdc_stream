@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+    - name: raw
+      database: RAPIDO
+      schema: RAW
+      tables:
+        - name: drivers
+        - name: riders
+        - name: rides

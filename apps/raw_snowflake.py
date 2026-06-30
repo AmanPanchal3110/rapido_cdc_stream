@@ -19,7 +19,7 @@ SNOWFLAKE_OPTION={
     "sfUser": os.environ.get("SNOWFLAKE_USER"),
     "sfPassword": os.environ.get("SNOWFLAKE_PASSWORD"),
     "sfDatabase": "RAPIDO",
-    "sfSchema": "STAGING",
+    "sfSchema": "RAW",
     "sfWarehouse": "COMPUTE_WH",
     "sfRole":      "ACCOUNTADMIN",
 }

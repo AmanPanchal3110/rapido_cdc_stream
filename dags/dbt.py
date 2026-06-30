@@ -34,16 +34,16 @@ def rapido():
             --packages {PACKAGES} \
             /opt/spark-apps/silver_delta.py"""
     )
-    staging_snoflake=BashOperator(
-        task_id="staging-snowflake",
+    raw_snoflake=BashOperator(
+        task_id="raw-snowflake",
         bash_command=f"""docker exec spark-worker-1 \
             /opt/spark/bin/spark-submit \
             --conf spark.jars.ivy=/tmp/.ivy \
             --packages {PACKAGES_SNOWFLAKE} \
-            /opt/spark-apps/staging_snowflake.py"""
+            /opt/spark-apps/raw_snowflake.py"""
     )
     
-    silver_task >> staging_snoflake
+    silver_task >> raw_snoflake
     
 rapido()
     

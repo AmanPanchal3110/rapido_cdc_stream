@@ -24,5 +24,7 @@ df_drivers=spark.read.format("delta").load("s3a://rapido-data/bronze/drivers/")
 df_riders=spark.read.format("delta").load("s3a://rapido-data/bronze/riders/")
 df_rides=spark.read.format("delta").load("s3a://rapido-data/bronze/rides/")
 
-print(df_ride.filter(col("status").isin(["completed","cancelled"])).count())
+
+print(df_rides.filter(col("status").isin(["completed","cancelled"])).count())
+
 
