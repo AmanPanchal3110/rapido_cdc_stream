@@ -42,8 +42,12 @@ def rapido():
             --packages {PACKAGES_SNOWFLAKE} \
             /opt/spark-apps/raw_snowflake.py"""
     )
+    dbt_snowflake=BashOperator(
+        task_id="dbt-snowflake",
+        bash_command=f"docker exec dbt_core dbt run"
+    )
     
-    silver_task >> raw_snoflake
+    silver_task >> raw_snoflake >> dbt_snowflake
     
 rapido()
     

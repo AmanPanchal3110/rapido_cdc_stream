@@ -103,7 +103,6 @@ driver_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/drivers")\
             .option("path","s3a://rapido-data/bronze/drivers/")\
-            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
             
@@ -111,7 +110,6 @@ rider_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/riders")\
             .option("path","s3a://rapido-data/bronze/riders/")\
-            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
             
@@ -119,8 +117,8 @@ ride_data.writeStream.format("delta")\
             .outputMode("append")\
             .option("checkpointLocation","s3a://rapido-data/bronze/checkpoint/rides")\
             .option("path","s3a://rapido-data/bronze/rides/")\
-            .option("delta.enableChangeDataFeed", "true")\
             .trigger(processingTime="1 seconds")\
             .start()
+            
             
 spark.streams.awaitAnyTermination()

@@ -22,7 +22,7 @@ SELECT
     r.city,
     r.rider_activity,
     r.rider_rating_category,
-    r.total_spent      AS rider_total_spent
+    r.total_spent AS rider_total_spent
 
 FROM {{ ref('fact_rides') }}   f
 LEFT JOIN {{ ref('dim_drivers') }} d ON f.driver_id = d.driver_id

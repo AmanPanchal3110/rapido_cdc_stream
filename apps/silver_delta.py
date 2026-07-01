@@ -121,6 +121,13 @@ def upsert(df,path,merge_key):
             .execute()
         print(f"upsert done {path}")
 tables=["drivers","riders","rides"]
+for table in tables:
+    spark.sql(f"""
+        ALTER TABLE delta.`s3a://rapido-data/bronze/{table}/`
+        SET TBLPROPERTIES (
+            delta.enableChangeDataFeed = true
+        )
+    """)
 versions={}
 dfs={}
 for table in tables:
@@ -147,6 +154,7 @@ if dfs["rides"] is not None:
             .withColumn("fare",          col("fare").cast(DecimalType(10, 2)))\
             .filter(col("status").isin("completed", "cancelled"))
             
+
 upsert(dfs["drivers"],"s3a://rapido-data/silver/drivers/","driver_id")
 upsert(dfs["riders"],"s3a://rapido-data/silver/riders/","rider_id")
 upsert(dfs["rides"],"s3a://rapido-data/silver/rides/","ride_id")
