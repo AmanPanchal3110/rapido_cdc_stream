@@ -9,15 +9,18 @@ import json
 import boto3
 
 spark=(
-    SparkSession.builder.appName("rapido_silver_delta")\
-    .config("spark.sql.extensions","io.delta.sql.DeltaSparkSessionExtension") \
-    .config("spark.sql.catalog.spark_catalog","org.apache.spark.sql.delta.catalog.DeltaCatalog") \
-    .master("spark://spark-master:7077") \
-    .config("spark.streaming.StopGracefullyOnShutdown", "true") \
+    SparkSession.builder.appName("rapido_silver_delta")
+    .config("spark.sql.extensions","io.delta.sql.DeltaSparkSessionExtension")
+    .config("spark.sql.catalog.spark_catalog","org.apache.spark.sql.delta.catalog.DeltaCatalog")
+    .master("spark://spark-master:7077")
+    .config("spark.cores.max", "2")     
+    .config("spark.executor.cores", "1")    
+    .config("spark.executor.memory", "1g")
+    .config("spark.streaming.StopGracefullyOnShutdown", "true")
     ##aws
-    .config("spark.hadoop.fs.s3a.access.key", os.environ.get("AWS_ACCESS_KEY_ID","")) \
-    .config("spark.hadoop.fs.s3a.secret.key", os.environ.get("AWS_SECRET_ACCESS_KEY","")) \
-    .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com") \
+    .config("spark.hadoop.fs.s3a.access.key", os.environ.get("AWS_ACCESS_KEY_ID",""))
+    .config("spark.hadoop.fs.s3a.secret.key", os.environ.get("AWS_SECRET_ACCESS_KEY",""))
+    .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com")
     .getOrCreate()
 )
 s3=boto3.client(

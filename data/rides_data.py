@@ -165,6 +165,6 @@ while True:
         t=threading.Thread(target=ride_flow,args=(driver_id,vehicle_type,rider_id))
         t.daemon = True
         t.start()
-        time.sleep(random.uniform(0.1,0.5))
+        time.sleep(random.uniform(0.5,1.5))
     else:
         time.sleep(1)
