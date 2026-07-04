@@ -53,7 +53,12 @@ def rapido():
     )
     dbt_snowflake=BashOperator(
         task_id="dbt_snowflake",
-        bash_command="docker exec dbt_core dbt run",
+        bash_command="""
+            docker exec dbt_core sh -c "
+            dbt deps &&
+            dbt run
+            "
+            """,
         retries=2,
         retry_delay=timedelta(minutes=2),
         execution_timeout=timedelta(minutes=5)
@@ -65,7 +70,7 @@ def rapido():
     )
     dbt_docs=BashOperator(
         task_id="dbt_docs",
-        bash_command="""
+        bash_command=f"""
             docker exec dbt_core dbt deps &&
             docker exec dbt_core dbt docs generate
             """,

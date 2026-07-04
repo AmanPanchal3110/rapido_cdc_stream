@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 spark=(
-    SparkSession.builder.appName("rapido_silver_delta")
+    SparkSession.builder.appName("bronze_silver_delta")
     .config("spark.sql.extensions","io.delta.sql.DeltaSparkSessionExtension")
     .config("spark.sql.catalog.spark_catalog","org.apache.spark.sql.delta.catalog.DeltaCatalog")
     .master("spark://spark-master:7077")

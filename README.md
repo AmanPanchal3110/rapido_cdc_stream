@@ -200,24 +200,26 @@ s3://rapido-data/silver/checkpoints/
 
 ### Marts Layer (Tables)
 
-| Model | Description | Key Columns |
+| Model | Description | Key Metrics |
 |-------|-------------|-------------|
-| `dim_drivers` | Driver dimension | activity, rating_category, cancellation_rate |
-| `dim_riders` | Rider dimension | activity, rating_category, total_spend |
-| `fact_rides` | Ride transactions | fare, distance, ratings, date parts |
-| `agg_daily` | Daily metrics | revenue, cancel_rate, avg_fare |
-| `agg_driver_perf` | Driver KPIs | revenue per driver, avg fare |
-| `obt_rides` | One Big Table | All joined — rides + drivers + riders |
+| `dim_drivers` | Driver dimension table | vehicle_type, avg_rating, cancellation_rate |
+| `dim_riders` | Rider dimension table | avg_rating, rider_activity |
+| `fact_rides` | Ride transactions fact table | fare, distance_km, status, vehicle_type |
+| `agg_daily` | Daily business KPIs | total_rides, total_revenue, avg_fare |
+| `agg_driver` | Driver performance metrics | total_rides, total_revenue, avg_fare |
+| `agg_pickup` | Pickup location leaderboard | total_rides, total_revenue, avg_fare |
+| `agg_vehicletype` | Daily metrics by vehicle type | revenue, rides, avg_fare for bike/car/auto |
+| `obt` | One Big Table for analytics | Driver + Rider + Ride attributes |
 
 ### dbt Tests
 
-| Test | Models | Description |
-|------|--------|-------------|
-| `unique` | All PKs | No duplicate IDs |
-| `not_null` | All PKs, fare | No null values |
-| `relationships` | fact_rides | FK integrity to dims |
-| `accepted_values` | status, vehicle_type | Valid enum values |
-| `accepted_range` | fare, rating | fare > 0, rating 0-5 |
+| Test | Models | Purpose |
+|------|--------|---------|
+| `unique` | Primary keys | Prevent duplicate IDs |
+| `not_null` | PKs, important metrics | Ensure mandatory fields exist |
+| `relationships` | `fact_rides` | Validate FK integrity with dimensions |
+| `accepted_values` | status, vehicle_type, rider_activity | Restrict valid categorical values |
+| `dbt_utils.accepted_range` | fare, ratings, revenue, cancellation_rate | Validate numeric ranges |
 
 ---
 
