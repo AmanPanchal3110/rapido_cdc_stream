@@ -135,7 +135,7 @@ The pipeline uses Python `Faker` library with `psycopg2.pool` and `threading` to
 - Raw CDC events from Kafka
 - Append-only Delta Lake tables
 - All operations captured: INSERT, UPDATE, DELETE
-- Debezium `op` field preserved (c/u/d)
+- Debezium `op` field preserved (r/c/u/d)
 - Timestamps in microseconds (Debezium format)
 - CDF enabled for incremental Silver processing
 
@@ -394,38 +394,37 @@ rapido_cdc_stream/
 ## 📸 Screenshots
 
 ### 1. Fake Data Generation — Python Faker
-[Screenshot: rapido_data.py running — 50 drivers + 200 riders inserted]
+![Fake Data Generation](assets/screenshots/rapido_data.png)
 
 ### 2. Ride Simulation — 20 Concurrent Threads
-[Screenshot: rides_data.py running — INSERT/UPDATE/DELETE events]
+![Ride Simulation](assets/screenshots/rides_data.png)
 
 ### 3. Debezium CDC Connector
-[Screenshot: Debezium UI showing connector RUNNING status]
+![Debezium Connector](assets/screenshots/debezium_connector.png)
 
 ### 4. Kafka UI — Topics with Messages
-[Screenshot: Kafka UI showing rapido.public.rides topic with messages]
+![Kafka UI](assets/screenshots/kafka_ui.png)
 
 ### 5. Bronze Streaming — Spark UI
-[Screenshot: Spark UI showing streaming job running]
+![Spark Streaming](assets/screenshots/spark_streaming.png)
 
 ### 6. Airflow DAG — Successful Run
-[Screenshot: Airflow DAG with all green tasks]
+![Airflow DAG](assets/screenshots/airflow_dag.png)
 
 ### 7. S3 Bronze + Silver — Delta Lake Files
-[Screenshot: S3 bucket showing _delta_log + parquet files]
+![S3 Delta Lake](assets/screenshots/s3_delta.png)
 
 ### 8. Snowflake STAGING Tables
-[Screenshot: Snowflake showing drivers, riders, rides tables]
+![Snowflake Staging](assets/screenshots/snowflake_staging.png)
 
 ### 9. Snowflake MARTS — dbt Models
-[Screenshot: Snowflake showing dim, fact, agg, obt tables]
+![Snowflake Marts](assets/screenshots/snowflake_marts.png)
 
 ### 10. dbt Docs — Lineage Graph
-[Screenshot: dbt docs showing model lineage]
+![dbt Lineage](assets/screenshots/dbt_lineage.png)
 
 ### 11. dbt Test Results — All Passed
-[Screenshot: dbt test showing all PASS]
-
+![dbt Tests](assets/screenshots/dbt_tests.png)
 ---
 
 ## 🎯 What I Learned
