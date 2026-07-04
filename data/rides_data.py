@@ -133,7 +133,7 @@ def ride_flow(driver_id,vehicle_type,rider_id):
             conn_pool.putconn(conn)
 
 print("simulation start")
-MAX_THREAD=20
+MAX_THREAD=15
 driver_lock=threading.Lock()
 while True:
     active=threading.active_count()-1

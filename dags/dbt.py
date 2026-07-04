@@ -22,7 +22,7 @@ PACKAGES_SNOWFLAKE = (
     "net.snowflake:snowflake-jdbc:3.14.4"
 )
 @dag(
-    schedule="0 */1 * * *",
+    schedule=None,
     start_date=datetime(2026, 6, 25, tzinfo=IST),
     catchup=False,
     tags=["rapido"],
@@ -53,13 +53,26 @@ def rapido():
     )
     dbt_snowflake=BashOperator(
         task_id="dbt_snowflake",
-        bash_command=f"docker exec dbt_core dbt run",
+        bash_command="docker exec dbt_core dbt run",
         retries=2,
         retry_delay=timedelta(minutes=2),
         execution_timeout=timedelta(minutes=5)
     )
+    dbt_test=BashOperator(
+        task_id="dbt_test",
+        bash_command=f"docker exec dbt_core dbt test",
+        execution_timeout=timedelta(minutes=5)
+    )
+    dbt_docs=BashOperator(
+        task_id="dbt_docs",
+        bash_command="""
+            docker exec dbt_core dbt deps &&
+            docker exec dbt_core dbt docs generate
+            """,
+        execution_timeout=timedelta(minutes=5)
+    )
     
-    silver_task >> raw_snoflake >> dbt_snowflake
+    silver_task >> raw_snoflake >> dbt_snowflake >> dbt_test >> dbt_docs
     
 rapido()
     

@@ -1,0 +1,132 @@
+version: 2
+
+models:
+  - name: dim_drivers
+    description: "Driver dimension table"
+    columns:
+      - name: driver_id
+        tests: [unique, not_null]
+      - name: vehicle_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['bike', 'car', 'auto']
+      - name: avg_rating
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 5
+      - name: cancellation_rate
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+
+  - name: dim_riders
+    description: "Rider dimension table"
+    columns:
+      - name: rider_id
+        tests: [unique, not_null]
+      - name: avg_rating
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 5
+      - name: rider_activity
+        tests:
+          - accepted_values:
+              values: ['HIGHLY ACTIVE', 'ACTIVE', 'MODERATE ACTIVE', 'NEW RIDER']
+
+  - name: fact_rides
+    description: "Ride transactions fact table"
+    columns:
+      - name: ride_id
+        tests: [unique, not_null]
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_drivers')
+              field: driver_id
+      - name: rider_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_riders')
+              field: rider_id
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'cancelled']
+      - name: fare
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false   # fare > 0, not >= 0
+      - name: distance_km
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+      - name: vehicle_type
+        tests:
+          - accepted_values:
+              values: ['bike', 'car', 'auto']
+
+  - name: obt_rides
+    description: "One Big Table — all joined"
+    columns:
+      - name: ride_id
+        tests: [unique, not_null]
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['completed', 'cancelled']
+      - name: fare
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+
+  - name: agg_daily
+    description: "Daily aggregated metrics"
+    columns:
+      - name: ride_date
+        tests: [unique, not_null]
+      - name: total_revenue
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: agg_pickup_location
+    description: "Revenue and ride count leaderboard by pickup location (all-time, no date breakdown)"
+    columns:
+      - name: pickup
+        tests: [unique, not_null]
+      - name: total_revenue
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: agg_vehicle_type_pivot
+    description: "Wide-format daily revenue/rides/avg_fare, one column set per vehicle type"
+    columns:
+      - name: ride_date
+        tests: [unique, not_null]
+      - name: total_revenue_auto
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: total_revenue_car
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: total_revenue_bike
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0

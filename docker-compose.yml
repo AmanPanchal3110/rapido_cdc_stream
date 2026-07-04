@@ -370,6 +370,8 @@ services:
         working_dir: /usr/app/dbt
         environment:
             - DBT_PROFILES_DIR=/root/.dbt
+        ports:
+            - "8088:8080"
         depends_on:
             - airflow-apiserver
 

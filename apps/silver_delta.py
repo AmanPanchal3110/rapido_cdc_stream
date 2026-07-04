@@ -99,7 +99,7 @@ def upsert(df,path,merge_key):
     df=df.withColumn("row_num",row_number().over(
         Window.partitionBy(merge_key).orderBy(col("updated_at").desc())
     )).filter(col("row_num") ==1).drop("row_num")
-    df_insert=df.filter(col("op")=="c").drop("op")
+    df_insert=df.filter(col("op").isin("c", "r")).drop("op")
     df_update=df.filter(col("op")=="u").drop("op")
     
     silver_exist=DeltaTable.isDeltaTable(spark,path)
