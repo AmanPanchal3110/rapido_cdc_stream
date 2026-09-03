@@ -24,3 +24,6 @@ class RiderProfileResponse(BaseModel):
 class ProfileResponse(BaseModel):
     user: UserProfileResponse
     rider: RiderProfileResponse
+    
+class updatedProfile(BaseModel):
+    city: str
