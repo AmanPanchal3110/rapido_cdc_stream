@@ -1,6 +1,7 @@
-def main():
-    print("Hello from rapido!")
+from fastapi import FastAPI
+from backend.utils.db import Base, engine
+from backend.users.router import user_router
+Base.metadata.create_all(engine)
+app=FastAPI()
 
-
-if __name__ == "__main__":
-    main()
+app.include_router(user_router)
