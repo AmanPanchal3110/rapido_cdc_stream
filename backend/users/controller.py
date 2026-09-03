@@ -7,6 +7,8 @@ from pwdlib import PasswordHash
 import jwt
 from datetime import datetime, timedelta
 from backend.utils.setting import setting
+from backend.riders.model import rider_data
+from backend.drivers.model import driver_data
 
 password_hash = PasswordHash.recommended()
 def get_password(password):
@@ -29,6 +31,15 @@ def generate_id(db:Session,role:str):
         is_user=db.query(user_register_model).filter(user_register_model.id == user_id).first()
         if is_user is None:
             return user_id
+        
+#create riders
+def create_rider(db:Session,id):
+    new_rider=rider_data(rider_id=id)
+    db.add(new_rider)
+#create driver
+def create_driver(db:Session,id):
+    new_driver=driver_data(driver_id=id)
+    db.add(new_driver)
 
 def user_register(body:user_schema,db:Session):
     is_user=db.query(user_register_model).filter(user_register_model.email_id == body.email).first()
@@ -53,6 +64,11 @@ def user_register(body:user_schema,db:Session):
                                  ,phn_no=body.phn_no
                                  ,role=body.role)
     db.add(new_user)
+    db.flush() 
+    if body.role == "rider":
+        create_rider(db,user_id)
+    else:
+        create_driver(db,user_id)
     db.commit()
     db.refresh(new_user)
     
