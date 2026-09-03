@@ -9,6 +9,7 @@ dags/__pycache__/
 __pycache__/
 *.py[cod]
 .venv/
+__pycache__
 
 # Jar files kabhi push mat karo
 *.jar

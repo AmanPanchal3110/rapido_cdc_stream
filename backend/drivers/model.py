@@ -4,7 +4,7 @@ from backend.utils.db import Base
 class driver_data(Base):
     __tablename__="drivers"
     
-    driver_id=Column(String, ForeignKey("user_data.id"),primary_key=True)
+    driver_id=Column(String, ForeignKey("user_data.id",ondelete="CASCADE"),primary_key=True)
     vechicle_type=Column(String,nullable=True)
     vechicle_no=Column(String,nullable=True)
     total_rides=Column(INTEGER,default=0)

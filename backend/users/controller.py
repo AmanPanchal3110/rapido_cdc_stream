@@ -84,7 +84,7 @@ def user_login(body:login_schema,db:Session):
     if not verify_password(body.password,is_user.hash_password):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail="wrong password")
     #create token
-    exp_time=datetime.now()+timedelta(seconds=setting.EXP_TIME)
+    exp_time=datetime.now()+timedelta(minutes=setting.EXP_TIME)
     token=jwt.encode({"_id":is_user.id,"exp":exp_time,"role":is_user.role},setting.SECRET_KEY,setting.ALGORITHM)
     return {"token": token}
     
